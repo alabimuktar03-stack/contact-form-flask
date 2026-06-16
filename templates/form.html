@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <!-- Replace 'logo.png' with your actual image filename -->
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="Company Logo">
+        </div>
+        <h2>Get in Touch</h2>
+        <form method="POST" action="/submit">
+            <label>Name</label>
+            <input type="text" name="name" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Message</label>
+            <textarea name="message" rows="4" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+        <div class="footer">
+            We'll respond within 24 hours.
+        </div>
+    </div>
+</body>
+</html>

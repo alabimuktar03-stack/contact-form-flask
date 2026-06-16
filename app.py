@@ -4,22 +4,31 @@ from email.message import EmailMessage
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import os
+import json
 
 app = Flask(__name__)
 
-# Email settings
+# Email settings – REPLACE these with your actual values (or use env vars)
 SENDER_EMAIL = "your-email@gmail.com"
 APP_PASSWORD = "xxxx xxxx xxxx xxxx"
 RECIPIENT_EMAIL = "business-owner@example.com"
 
-# Google Sheets setup
+# Google Sheets setup (works both locally and on Render)
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-# Replace 'path/to/your-downloaded-key.json' with the actual path to the JSON file you downloaded
-creds = ServiceAccountCredentials.from_json_keyfile_name('my-key.json', scope)
-client = gspread.authorize(creds)
 
-# Open your sheet by name (must match exactly)
+if 'GOOGLE_CREDS_JSON' in os.environ:
+    # On Render: use the JSON string from environment variable
+    creds_dict = json.loads(os.environ['GOOGLE_CREDS_JSON'])
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+else:
+    # Local development: use the file
+    creds = ServiceAccountCredentials.from_json_keyfile_name('my-key.json', scope)
+
+client = gspread.authorize(creds)
 sheet = client.open("Contact Form Leads").worksheet("Leads")
+
+# ... rest of your routes (show_form, handle_submit) unchanged ...
 
 @app.route('/')
 def show_form():

@@ -9,10 +9,10 @@ import json
 
 app = Flask(__name__)
 
-# Email settings – REPLACE these with your actual values (or use env vars)
-SENDER_EMAIL = "your-email@gmail.com"
-APP_PASSWORD = "xxxx xxxx xxxx xxxx"
-RECIPIENT_EMAIL = "business-owner@example.com"
+# Email settings – read from environment variables
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'alabimuktar03@gmail.com')
+APP_PASSWORD = os.environ.get('APP_PASSWORD', 'gxcv emlp mshn ysjz')
+RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL', 'alabimuktar03@gmail.com')
 
 # Google Sheets setup (works both locally and on Render)
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -28,8 +28,6 @@ else:
 client = gspread.authorize(creds)
 sheet = client.open("Contact Form Leads").worksheet("Leads")
 
-# ... rest of your routes (show_form, handle_submit) unchanged ...
-
 @app.route('/')
 def show_form():
     return render_template('form.html')
@@ -40,7 +38,7 @@ def handle_submit():
     email = request.form['email']
     message = request.form['message']
     
-    # 1. Send email (same as before)
+    # 1. Send email
     msg = EmailMessage()
     msg['Subject'] = f"New contact from {name}"
     msg['From'] = SENDER_EMAIL
@@ -67,4 +65,3 @@ def handle_submit():
 
 if __name__ == '__main__':
     app.run(debug=True)
-

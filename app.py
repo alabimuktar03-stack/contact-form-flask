@@ -38,7 +38,7 @@ def handle_submit():
     email = request.form['email']
     message = request.form['message']
     
-    # 1. Send email
+    # 1. Send email (TLS on port 587)
     msg = EmailMessage()
     msg['Subject'] = f"New contact from {name}"
     msg['From'] = SENDER_EMAIL
@@ -46,7 +46,8 @@ def handle_submit():
     msg.set_content(f"Name: {name}\nEmail: {email}\nMessage: {message}")
     
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+            smtp.starttls()
             smtp.login(SENDER_EMAIL, APP_PASSWORD)
             smtp.send_message(msg)
         print("Email sent successfully")
